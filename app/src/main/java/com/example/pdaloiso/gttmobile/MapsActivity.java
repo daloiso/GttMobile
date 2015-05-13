@@ -1,8 +1,11 @@
 package com.example.pdaloiso.gttmobile;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
+import com.example.pdaloiso.gttmobile.database.SQLController;
+import com.example.pdaloiso.gttmobile.database.SqlController;
+import com.example.pdaloiso.gttmobile.model.Percorso;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -11,12 +14,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-
+    private SqlController sqlcon;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
+
+        sqlcon = new SqlController(this);
+
     }
 
     @Override
@@ -60,6 +66,10 @@ public class MapsActivity extends FragmentActivity {
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
     private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        Percorso p = sqlcon.getPercorso();
+        mMap.addMarker(new MarkerOptions().position(new LatLng(p.getFermate().get(0).getX(),
+                p.getFermate().get(0).getY())).title("Marker"));
+        mMap.addMarker(new MarkerOptions().position(new LatLng(p.getFermate().get(1).getX(),
+                p.getFermate().get(1).getY())).title("Marker"));
     }
 }
