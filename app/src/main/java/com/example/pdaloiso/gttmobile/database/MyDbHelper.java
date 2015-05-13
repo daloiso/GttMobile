@@ -15,11 +15,11 @@ import java.sql.SQLException;
 public class MyDbHelper extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "gttMobile";
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 8;
 
     public static final String PERCORSO_TABLE = "PERCORSO";
-    public static final String PERCORSO_FIELD1 = "ID_FERMATA";
-    public static final String PERCORSO_FIELD2 = "ID_FERMATA";
+    public static final String PERCORSO_FIELD1 = "ID_INIZIO_FERMATA";
+    public static final String PERCORSO_FIELD2 = "ID_FINE_FERMATA";
     public static final String[] PERCORSO_ALL_COLUMN = {PERCORSO_FIELD1, PERCORSO_FIELD2};
 
     public static final String FERMATA_TABLE = "FERMATA";
@@ -45,8 +45,8 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE " + PERCORSO_TABLE + " IF EXISTS " + PERCORSO_TABLE);
-        db.execSQL("DROP TABLE " + FERMATA_TABLE + " IF EXISTS " + FERMATA_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + PERCORSO_TABLE);
+        db.execSQL("DROP TABLE  IF EXISTS " + FERMATA_TABLE);
         this.onCreate(db);
 
     }

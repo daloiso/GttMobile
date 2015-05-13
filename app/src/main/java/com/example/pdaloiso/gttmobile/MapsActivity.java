@@ -3,25 +3,30 @@ package com.example.pdaloiso.gttmobile;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import com.example.pdaloiso.gttmobile.database.SQLController;
 import com.example.pdaloiso.gttmobile.database.SqlController;
 import com.example.pdaloiso.gttmobile.model.Percorso;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MapsActivity extends FragmentActivity {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private SqlController sqlcon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        setUpMapIfNeeded();
 
         sqlcon = new SqlController(this);
+
+        setUpMapIfNeeded();
+
 
     }
 
@@ -67,9 +72,23 @@ public class MapsActivity extends FragmentActivity {
      */
     private void setUpMap() {
         Percorso p = sqlcon.getPercorso();
-        mMap.addMarker(new MarkerOptions().position(new LatLng(p.getFermate().get(0).getX(),
-                p.getFermate().get(0).getY())).title("Marker"));
-        mMap.addMarker(new MarkerOptions().position(new LatLng(p.getFermate().get(1).getX(),
-                p.getFermate().get(1).getY())).title("Marker"));
+        LatLng latlon1 = new LatLng(p.getFermate().get(0).getX(),
+                p.getFermate().get(0).getY());
+        LatLng latlon2 = new LatLng(p.getFermate().get(1).getX(),
+                p.getFermate().get(1).getY());
+        mMap.addMarker(new MarkerOptions().position(latlon1).title("Marker1"));
+        mMap.addMarker(new MarkerOptions().position(latlon2).title("Marker2"));
+
+        mMap.addPolyline(new PolylineOptions().geodesic(true)
+                        .add(latlon1)
+                        .add(latlon2)
+        );
+
+        //TODO Northern > southern
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                new LatLng(((latlon1.latitude + latlon2.latitude) / 2),
+                        (latlon1.longitude + latlon2.longitude) / 2),
+                15));
+
     }
 }

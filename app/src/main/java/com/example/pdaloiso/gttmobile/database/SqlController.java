@@ -116,7 +116,7 @@ public class SqlController {
                 cursor.moveToNext();
             }
             cursor.close();
-            close();
+
 
             String whereClause = MyDbHelper.FERMATA_FIELD1+" = ? ";
             Fermata fermata = percorso.getFermate().get(0);
@@ -145,12 +145,12 @@ public class SqlController {
                 cursor3.moveToNext();
             }
             cursor3.close();
-
+            close();
             return percorso;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        return null;
     }
 
     private Fermata cursorToFermata(Cursor cursor) {
