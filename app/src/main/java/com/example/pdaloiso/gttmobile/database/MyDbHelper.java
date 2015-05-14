@@ -1,13 +1,8 @@
 package com.example.pdaloiso.gttmobile.database;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.example.pdaloiso.gttmobile.model.Fermata;
-
-import java.sql.SQLException;
 
 /**
  * Created by pdaloiso on 13/05/2015.
@@ -53,6 +48,7 @@ public class MyDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         db.execSQL(PERCORSO_CREATE_TABLE);
         db.execSQL(FERMATA_CREATE_TABLE);
     }

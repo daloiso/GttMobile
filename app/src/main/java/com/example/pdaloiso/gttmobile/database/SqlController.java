@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.example.pdaloiso.gttmobile.model.Fermata;
 import com.example.pdaloiso.gttmobile.model.Percorso;
 
-import org.w3c.dom.Comment;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -72,6 +70,9 @@ public class SqlController {
     public void insertDataExample() {
         try {
             open();
+            database.execSQL("DROP TABLE IF EXISTS " + MyDbHelper.PERCORSO_TABLE);
+            database.execSQL("DROP TABLE  IF EXISTS " + MyDbHelper.FERMATA_TABLE);
+            dbHelper.onCreate(database);
             Fermata inizio = new Fermata();
             inizio.setAltreIndicazioni("altre indicazioni");
             inizio.setBanchina(true);

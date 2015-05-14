@@ -1,34 +1,44 @@
 package com.example.pdaloiso.gttmobile;
 
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.widget.Toast;
+import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.pdaloiso.gttmobile.database.SqlController;
-import com.example.pdaloiso.gttmobile.model.ModelParsedWithGson;
 import com.example.pdaloiso.gttmobile.model.Percorso;
-import com.example.pdaloiso.gttmobile.ws.GsonRequest;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity {
+public class MapsActivity extends FragmentActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private SqlController sqlcon;
+    private GoogleApiClient mGoogleApiClient;
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.e("onConnectionSuspended",String.valueOf(i));
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.e("onConnectionFailed",connectionResult.toString());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +49,12 @@ public class MapsActivity extends FragmentActivity {
 
         setUpMapIfNeeded();
 
-
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -102,6 +117,8 @@ public class MapsActivity extends FragmentActivity {
                         (latlon1.longitude + latlon2.longitude) / 2),
                 15));
 
+
+
         /*
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://api.androidhive.info/volley/person_object.json";
@@ -131,4 +148,25 @@ public class MapsActivity extends FragmentActivity {
         */
     }
 
+
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (mLastLocation != null) {
+            Geocoder geocoder;
+            List<Address> addresses;
+            geocoder = new Geocoder(this, Locale.getDefault());
+            String address ="io sono qui";
+             // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            try {
+                addresses = geocoder.getFromLocation(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1);
+                address = addresses.get(0).getAddressLine(0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            mMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
+                    mLastLocation.getLongitude())).title(address));
+        }
+    }
 }
