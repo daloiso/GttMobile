@@ -6,6 +6,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.Menu;
 
 import com.example.pdaloiso.gttmobile.database.SqlController;
 import com.example.pdaloiso.gttmobile.model.Percorso;
@@ -168,5 +169,11 @@ public class MapsActivity extends FragmentActivity implements
             mMap.addMarker(new MarkerOptions().position(new LatLng(mLastLocation.getLatitude(),
                     mLastLocation.getLongitude())).title(address));
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.mainmenu, menu);
+        return  super.onCreateOptionsMenu(menu);
     }
 }
