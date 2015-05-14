@@ -1,5 +1,6 @@
 package com.example.pdaloiso.gttmobile;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.pdaloiso.gttmobile.database.SqlController;
 import com.example.pdaloiso.gttmobile.model.Percorso;
@@ -175,5 +177,11 @@ public class MapsActivity extends FragmentActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.mainmenu, menu);
         return  super.onCreateOptionsMenu(menu);
+    }
+
+    public boolean search(MenuItem menuItem) {
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
+        return true;
     }
 }
